@@ -60,15 +60,20 @@ function FrontPage() {
         <ListGroup className="w-full rounded-none">
           {contacts.map((contact) => (
             <ListGroupItem key={contact.id} href="#" className="w-full">
-              <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-semibold text-lg overflow-hidden">
+              <div className="flex items-center gap-3 w-full">
+                {/* Avatar */}
+                <div className="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-700 font-semibold text-lg overflow-hidden">
                   {contact.name.charAt(0).toUpperCase()}
                 </div>
-                <div className="flex-grow">
-                  <div className="font-semibold text-gray-900">{contact.name}</div>
+
+                {/* Name + Last Message */}
+                <div className="flex flex-grow flex-col">
+                  <div className="flex justify-between items-center w-full">
+                    <div className="font-semibold text-gray-900">{contact.name}</div>
+                    <div className="text-xs text-gray-500 ml-2 min-w-fit">{contact.time}</div>
+                  </div>
                   <div className="text-sm text-gray-600 truncate">{contact.lastMsg}</div>
                 </div>
-                <div className="text-xs text-gray-500 self-start mt-1">{contact.time}</div>
               </div>
             </ListGroupItem>
           ))}

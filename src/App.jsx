@@ -7,6 +7,7 @@ import FrontPage from './pages/FrontPage';
 import LoginPage from './pages/LoginPage';
 import SignUpPage from './pages/SignUpPage';
 import PersonalPage from './pages/PersonalPage';
+import NewContactPage from './pages/NewContactPage';
 function App() {
   console.log("rrrrrrrrr");
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/FrontPage" element={<FrontPage />} />
         <Route path="/SignUpPage" element={<SignUpPage />} />
         <Route path="/PersonalPage" element={<PersonalPage />} />
+        <Route path="/NewContactPage" element={<NewContactPage />} />
       </Routes>
     </Router>
   );

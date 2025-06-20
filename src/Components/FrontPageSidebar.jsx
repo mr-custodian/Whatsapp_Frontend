@@ -1,7 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom"; // ✅ added
+
 
 function FrontPageSidebar({ isOpen, onClose, position }) {
+  const navigate = useNavigate(); // ✅ added
+
   if (!isOpen) return null;
+
+  const handleNewContact = () => {
+  onClose(); // ✅ Close the sidebar first
+  navigate("/NewContactPage"); // ✅ Go to NewContactPage
+  };
 
   return (
     <div
@@ -14,7 +23,12 @@ function FrontPageSidebar({ isOpen, onClose, position }) {
         onClick={(e) => e.stopPropagation()}
       >
         <ul className="py-2">
-          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">New Group</li>
+          <li
+            onClick={handleNewContact}
+            className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer"
+          >
+            New Contact
+          </li>
           <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">New Broadcast</li>
           <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">Linked Devices</li>
           <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">Starred Messages</li>
