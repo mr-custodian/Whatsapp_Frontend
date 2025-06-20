@@ -1,56 +1,25 @@
 import React from "react";
 
-function FrontPageSidebar({ isOpen, onClose }) {
+function FrontPageSidebar({ isOpen, onClose, position }) {
+  if (!isOpen) return null;
+
   return (
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 z-[55] transition-opacity duration-300 ease-in-out ${
-        isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className="fixed inset-0 z-[55]"
       onClick={onClose}
     >
-      {/* Sidebar Panel */}
       <div
-        className={`fixed right-0 top-0 w-64 bg-white shadow-lg p-4 z-[60] rounded-bl-2xl rounded-tl-2xl transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-y-0" : "-translate-y-full"
-        }`}
-        style={{ height: "100vh" }}
+        className="absolute z-[60] w-52 bg-white rounded-xl shadow-lg animate-slide-down"
+        style={{ top: position.top, right: position.right }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-2xl font-bold mb-4">Sidebar Menu</h2>
-        <ul>
-          <li className="mb-2">
-            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
-              New Group
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
-              New Broadcast
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
-              Linked Devices
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
-              Starred Messages
-            </a>
-          </li>
-          <li className="mb-2">
-            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
-              Settings
-            </a>
-          </li>
+        <ul className="py-2">
+          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">New Group</li>
+          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">New Broadcast</li>
+          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">Linked Devices</li>
+          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">Starred Messages</li>
+          <li className="px-4 py-2 text-gray-800 font-medium hover:bg-gray-100 cursor-pointer">Settings</li>
         </ul>
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
-          aria-label="Close menu"
-        >
-          &times;
-        </button>
       </div>
     </div>
   );
