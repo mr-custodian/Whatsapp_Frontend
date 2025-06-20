@@ -1,39 +1,59 @@
+import React from "react";
 
-"use client";
-
-import { Sidebar, SidebarItem, SidebarItemGroup, SidebarItems } from "flowbite-react";
-import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from "react-icons/hi";
-
-function FrontPageSidebar() {
+function FrontPageSidebar({ isOpen, onClose }) {
   return (
-    <Sidebar aria-label="Default sidebar example">
-      <SidebarItems>
-        <SidebarItemGroup>
-          <SidebarItem href="#" icon={HiChartPie}>
-            Dashboard
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiViewBoards} label="Pro" labelColor="dark">
-            Kanban
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiInbox} label="3">
-            Inbox
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiUser}>
-            Users
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiShoppingBag}>
-            Products
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiArrowSmRight}>
-            Sign In
-          </SidebarItem>
-          <SidebarItem href="#" icon={HiTable}>
-            Sign Up
-          </SidebarItem>
-        </SidebarItemGroup>
-      </SidebarItems>
-    </Sidebar>
+    <div
+      className={`fixed inset-0 bg-black bg-opacity-50 z-[55] transition-opacity duration-300 ease-in-out ${
+        isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+      }`}
+      onClick={onClose}
+    >
+      {/* Sidebar Panel */}
+      <div
+        className={`fixed right-0 top-0 w-64 bg-white shadow-lg p-4 z-[60] rounded-bl-2xl rounded-tl-2xl transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
+        }`}
+        style={{ height: "100vh" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 className="text-2xl font-bold mb-4">Sidebar Menu</h2>
+        <ul>
+          <li className="mb-2">
+            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
+              New Group
+            </a>
+          </li>
+          <li className="mb-2">
+            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
+              New Broadcast
+            </a>
+          </li>
+          <li className="mb-2">
+            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
+              Linked Devices
+            </a>
+          </li>
+          <li className="mb-2">
+            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
+              Starred Messages
+            </a>
+          </li>
+          <li className="mb-2">
+            <a href="#" className="text-blue-600 hover:underline block p-2 rounded">
+              Settings
+            </a>
+          </li>
+        </ul>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl"
+          aria-label="Close menu"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
   );
-};
+}
 
 export default FrontPageSidebar;

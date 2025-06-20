@@ -3,7 +3,7 @@ import { MoreVertical } from "lucide-react";
 import { useState } from "react";
 import FrontPageSidebar from "./FrontPageSidebar"; // Adjust path if necessary
 
-function FrontPageNavbar() {
+function tmp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -35,4 +35,4 @@ function FrontPageNavbar() {
   );
 }
 
-export default FrontPageNavbar;
+export default tmp;
