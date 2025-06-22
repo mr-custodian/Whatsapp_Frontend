@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar, NavbarBrand } from "flowbite-react";
 import { ArrowLeft, SendHorizontal } from "lucide-react";
+import { useParams } from 'react-router-dom';
+import axios from "axios"; // ✅ for making API calls
+
+
 
 const UserName ="Alice";
 
@@ -9,12 +13,52 @@ function PersonalChatPage() {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const user_id  = useParams().id;
+  const contact_id = useParams().contact_id;
+  //console.log(id,"uuu",contact_id);
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    setMessages((prev) => [...prev, { text: message, sender: "me" }]);
-    setMessage("");
+const handleSend = async () => {
+  if (!message.trim()) return;
+
+  const newMsg = {
+    chatstr: message,
+    sender_id: parseInt(user_id),
+    reciever_id: parseInt(contact_id),
+    timing: new Date().toISOString(), // or let backend handle it
   };
+
+  try {
+    // ✅ Send to backend
+    await axios.post(`http://localhost:3000/api/PersonalPage`, newMsg);
+
+    // ✅ Optimistically update UI
+    setChats((prev) => [...prev, newMsg]);
+
+    // ✅ Clear input
+    setMessage("");
+  } catch (err) {
+    console.error("Failed to send message:", err);
+    // Optional: show toast or alert
+  }
+};
+
+  useEffect(() => {
+  const fetchContacts = async () => {
+    try {
+      // Replace with actual logic to get user identifier (email or ID)
+      console.log({user_id, contact_id});
+      const response = await axios.get(`http://localhost:3000/api/PersonalPage/${user_id}/${contact_id}`);
+      console.log(response.data.chats);
+      setChats(response.data.chats);
+    } catch (error) {
+      console.error("Failed to fetch contacts:", error);
+    }
+  };
+
+  fetchContacts();
+}, []);
+
+const [Chats, setChats] = useState([]);
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-gray-50">
@@ -41,16 +85,16 @@ function PersonalChatPage() {
 
       {/* ✅ Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {messages.map((msg, index) => (
+        {Chats.map((msg, index) => (
           <div
             key={index}
-            className={`max-w-xs px-4 py-2 rounded-lg ${
-              msg.sender === "me"
-                ? "bg-blue-500 text-white self-end ml-auto"
-                : "bg-gray-200 text-gray-800 self-start"
+            className={`max-w-xs px-4 py-2 rounded-lg break-words ${
+              msg.sender_id === parseInt(user_id) // ✅ Check if message is sent by current user
+                ? "bg-blue-500 text-white self-end ml-auto mr-10"   // ✅ More shifted to right
+                : "bg-gray-200 text-gray-800 self-start ml-10"       // ✅ More shifted to left
             }`}
           >
-            {msg.text}
+            {msg.chatstr}
           </div>
         ))}
       </div>

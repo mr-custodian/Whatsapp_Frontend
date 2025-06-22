@@ -18,8 +18,9 @@ export function LoginPage() { //Defines an async function that handles login whe
         password,
       });
       alert("Login successful!");
-      console.log(res.data);
-      navigate('../FrontPage');
+      //console.log(res.data);
+      const userId = res.data.user.id;  //obtain id from data os user
+      navigate(`../FrontPage/${userId}`);
 
 
     } catch (err) {
