@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { formatChatTime } from "../Functions";
 
 
-function FrontPage() {
+function FrontPage({ socket }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarPosition, setSidebarPosition] = useState({ top: 0, right: 0 }); // ✅ added
   
@@ -19,6 +19,7 @@ function FrontPage() {
   console.log("User ID from URL:", user_id);
 
   const toggleSidebar = () => {
+          console.log('5559');
     if (!sidebarOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setSidebarPosition({
@@ -33,18 +34,32 @@ function FrontPage() {
 useEffect(() => {
   const fetchContacts = async () => {
     try {
+            console.log('5558');
       // Replace with actual logic to get user identifier (email or ID)
-
       const response = await axios.get(`http://localhost:3000/api/FrontPage/${user_id}`);
-      console.log(response.data.chats);
-      console.log(response.data.chats[0].timing);
       setContacts(response.data.chats);
     } catch (error) {
       console.error("Failed to fetch contacts:", error);
     }
   };
 
-  fetchContacts();
+if (socket) {
+    if (socket.connected) {
+      socket.on("message-received", fetchContacts);
+    } else {
+      socket.on("connect", () => {
+        socket.on("message-received", fetchContacts);
+      });
+    }
+  fetchContacts(); // Initial fetch
+  }
+
+
+  return () => {
+    if (socket) {
+      socket.off("message-received", fetchContacts);
+    }
+  };
 }, []);
 
 

@@ -9,7 +9,7 @@ import axios from "axios"; // ✅ for making API calls
 
 const UserName ="Alice";
 
-function PersonalChatPage() {
+function PersonalChatPage( {socket} ) {
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -24,31 +24,31 @@ const handleSend = async () => {
     chatstr: message,
     sender_id: parseInt(user_id),
     reciever_id: parseInt(contact_id),
-    timing: new Date().toISOString(), // or let backend handle it
+    timing: new Date().toISOString(),
   };
 
   try {
     // ✅ Send to backend
     await axios.post(`http://localhost:3000/api/PersonalPage`, newMsg);
 
+    // ✅ Emit message to socket
+    if (socket && socket.connected) {
+      socket.emit("send-message", newMsg); // ✅ Notify server for live update
+    }
+
     // ✅ Optimistically update UI
     setChats((prev) => [...prev, newMsg]);
-
-    // ✅ Clear input
     setMessage("");
   } catch (err) {
     console.error("Failed to send message:", err);
-    // Optional: show toast or alert
   }
 };
+
 
   useEffect(() => {
   const fetchContacts = async () => {
     try {
-      // Replace with actual logic to get user identifier (email or ID)
-      console.log({user_id, contact_id});
       const response = await axios.get(`http://localhost:3000/api/PersonalPage/${user_id}/${contact_id}`);
-      console.log(response.data.chats);
       setChats(response.data.chats);
     } catch (error) {
       console.error("Failed to fetch contacts:", error);
@@ -56,7 +56,25 @@ const handleSend = async () => {
   };
 
   fetchContacts();
-}, []);
+
+  if (socket) {
+    const handleMessage = (data) => {
+      if (
+        (data.sender_id === parseInt(contact_id) && data.reciever_id === parseInt(user_id)) ||
+        (data.sender_id === parseInt(user_id) && data.reciever_id === parseInt(contact_id))
+      ) {
+        setChats((prev) => [...prev, data]);
+      }
+    };
+
+    socket.on("message-received", handleMessage);
+
+    return () => {
+      socket.off("message-received", handleMessage); // Proper cleanup
+    };
+  }
+}, [socket, user_id, contact_id]); // ✅ dependency array is important
+
 
 const [Chats, setChats] = useState([]);
 
